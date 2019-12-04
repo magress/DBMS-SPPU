@@ -1,0 +1,380 @@
+----------ASSIGNMENT 1-----------------------
+
+
+pankaj@abhi:~$ mysql -u root -p
+Enter abhi: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 27
+Server version: 5.7.23-0ubuntu0.16.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> select user from mysql.user;
++------------------+
+| user             |
++------------------+
+| pankaj         |
+| debian-sys-maint |
+| mysql.session    |
+| mysql.sys        |
+| root             |
++------------------+
+5 rows in set (0.00 sec)
+
+mysql> drop user 'pankaj'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> exit
+Bye
+pankaj@abhi:~$ clear
+
+
+
+
+
+
+
+
+pankaj@abhi:~$ mysql -u root -p
+Enter abhi: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 28
+Server version: 5.7.23-0ubuntu0.16.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> select user from mysql.user;
++------------------+
+| user             |
++------------------+
+| debian-sys-maint |
+| mysql.session    |
+| mysql.sys        |
+| root             |
++------------------+
+4 rows in set (0.00 sec)
+
+mysql> create user 'pankaj'@'localhost' identified by 'abhi';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> create database ab;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use ab;
+Database changed
+mysql> grant all on ab.* to 'pankaj'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> exit
+Bye
+pankaj@abhi:~$ mysql -u pankaj -p
+Enter abhi: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 29
+Server version: 5.7.23-0ubuntu0.16.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| ab                 |
++--------------------+
+2 rows in set (0.00 sec)
+
+mysql> use ab;
+Database changed
+mysql> show grants for CURRENT_USER;
++----------------------------------------------------------+
+| Grants for pankaj@localhost                            |
++----------------------------------------------------------+
+| GRANT USAGE ON *.* TO 'pankaj'@'localhost'             |
+| GRANT ALL PRIVILEGES ON `ab`.* TO 'pankaj'@'localhost' |
++----------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql> create table department
+    -> ( Did varchar(3),
+    ->   dname varchar(20) NOT NULL,
+    ->   PRIMARY KEY(Did)
+    -> );
+Query OK, 0 rows affected (0.30 sec)
+
+mysql> create table project
+    -> ( Pid varchar(10),
+    ->   pname varchar(20) NOT NULL,
+    ->   PRIMARY KEY(Pid)
+    -> );
+Query OK, 0 rows affected (0.39 sec)
+
+mysql> create table employee
+    -> (
+    ->  empid int UNIQUE,
+    ->  ename varchar(20) NOT NULL,
+    ->  DOJ date,
+    ->  DOB date,
+    ->  salary int,
+    ->  address varchar(30),
+    ->  did varchar(3),
+    ->  pid varchar(3),
+    ->  PRIMARY KEY(empid),
+    ->  FOREIGN KEY(did) references department(Did),
+    ->  FOREIGN KEY(pid) references project(Pid),
+    ->  CHECK (salary>=30000)
+    -> );
+Query OK, 0 rows affected (0.42 sec)
+
+mysql> desc employee;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| empid   | int(11)     | NO   | PRI | NULL    |       |
+| ename   | varchar(20) | NO   |     | NULL    |       |
+| DOJ     | date        | YES  |     | NULL    |       |
+| DOB     | date        | YES  |     | NULL    |       |
+| salary  | int(11)     | YES  |     | NULL    |       |
+| address | varchar(30) | YES  |     | NULL    |       |
+| did     | varchar(3)  | YES  | MUL | NULL    |       |
+| pid     | varchar(3)  | YES  | MUL | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> insert into department values('CMP','COMPUTER');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into department values('IT','INFORMATION');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into department values('MEC','MECHANICAL');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into department values('EC','ELECTRONICS');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> select * from department;
++-----+-------------+
+| Did | dname       |
++-----+-------------+
+| CMP | COMPUTER    |
+| EC  | ELECTRONICS |
+| IT  | INFORMATION |
+| MEC | MECHANICAL  |
++-----+-------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into project values('CLD','CLOUD.COMP');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into project values('ARD','ARDUINO');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into project values('ML','MACHIN_L.');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into project values('AND','ANDROID');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into project values('IMG','IMG.PROCE.');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from project;
++-----+------------+
+| Pid | pname      |
++-----+------------+
+| AND | ANDROID    |
+| ARD | ARDUINO    |
+| CLD | CLOUD.COMP |
+| IMG | IMG.PROCE. |
+| ML  | MACHIN_L.  |
++-----+------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into employee values(1,'pankaj','2012-12-12','1997-06-21',40000,'a-pune','IT','CLD');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into employee values(2,'ramesh','2012-11-12','1996-06-22',50000,'b-pune','CMP','IMG');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee values(3,'suresh','2014-10-10','1995-06-30',60000,'c-pune','CMP','IMG');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee values(4,'vikas','2017-10-10','1999-06-30',45000,'d-pune','EC','ARD');
+Query OK, 1 row affected (0.34 sec)
+
+mysql> insert into employee values(5,'nitesh','2017-11-10','1998-06-28',55000,'e-pune','EC','ARD');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee values(6,'abhishek','2014-11-01','1998-07-12',66000,'f-pune','MEC','AND');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee values(7,'sashank','2011-11-12','1998-06-22',62000,'g-pune','CMP','MACHINE_L.');
+
+mysql> 
+mysql> insert into employee values(7,'sashank','2011-11-12','1998-06-22',62000,'g-pune','CMP','ML');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | pankaj | 2012-12-12 | 1997-06-21 |  40000 | a-pune  | IT   | CLD  |
+|     2 | ramesh   | 2012-11-12 | 1996-06-22 |  50000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2014-10-10 | 1995-06-30 |  60000 | c-pune  | CMP  | IMG  |
+|     4 | vikas    | 2017-10-10 | 1999-06-30 |  45000 | d-pune  | EC   | ARD  |
+|     5 | nitesh   | 2017-11-10 | 1998-06-28 |  55000 | e-pune  | EC   | ARD  |
+|     6 | abhishek | 2014-11-01 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  62000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+7 rows in set (0.00 sec)
+
+mysql> create index idx_empid
+    -> on employee(empid);
+Query OK, 0 rows affected (0.36 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create table temp
+    -> ( id int,
+    ->   name varchar(3),
+    ->   salary int
+    -> );
+Query OK, 0 rows affected (0.29 sec)
+
+mysql> alter table temp
+    -> add primary key(id);
+Query OK, 0 rows affected (0.46 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into temp values(11,'ram',55000);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into temp values(22,'sam',65000);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from temp;
++----+------+--------+
+| id | name | salary |
++----+------+--------+
+| 11 | ram  |  55000 |
+| 22 | sam  |  65000 |
++----+------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | pankaj | 2012-12-12 | 1997-06-21 |  40000 | a-pune  | IT   | CLD  |
+|     2 | ramesh   | 2012-11-12 | 1996-06-22 |  50000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2014-10-10 | 1995-06-30 |  60000 | c-pune  | CMP  | IMG  |
+|     4 | vikas    | 2017-10-10 | 1999-06-30 |  45000 | d-pune  | EC   | ARD  |
+|     5 | nitesh   | 2017-11-10 | 1998-06-28 |  55000 | e-pune  | EC   | ARD  |
+|     6 | abhishek | 2014-11-01 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  62000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+7 rows in set (0.00 sec)
+
+mysql> select * from department;
++-----+-------------+
+| Did | dname       |
++-----+-------------+
+| CMP | COMPUTER    |
+| EC  | ELECTRONICS |
+| IT  | INFORMATION |
+| MEC | MECHANICAL  |
++-----+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from project;
++-----+------------+
+| Pid | pname      |
++-----+------------+
+| AND | ANDROID    |
+| ARD | ARDUINO    |
+| CLD | CLOUD.COMP |
+| IMG | IMG.PROCE. |
+| ML  | MACHIN_L.  |
++-----+------------+
+5 rows in set (0.00 sec)
+
+mysql> drop table temp;
+Query OK, 0 rows affected (0.16 sec)
+
+
+
+pankaj@abhi:~$ mysql -u root -p
+Enter abhi: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 30
+Server version: 5.7.23-0ubuntu0.16.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use ab;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> revoke all on ab.* from 'pankaj'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+pankaj@abhi:~$ mysql -u pankaj -p
+Enter abhi: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 31
+Server version: 5.7.23-0ubuntu0.16.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
++--------------------+
+1 row in set (0.00 sec)
+

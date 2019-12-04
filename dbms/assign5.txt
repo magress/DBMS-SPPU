@@ -1,0 +1,155 @@
+
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> desc employee;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| empid   | int(11)     | NO   | PRI | NULL    |       |
+| ename   | varchar(20) | NO   |     | NULL    |       |
+| DOJ     | date        | YES  |     | NULL    |       |
+| DOB     | date        | YES  |     | NULL    |       |
+| salary  | int(11)     | YES  |     | NULL    |       |
+| address | varchar(30) | YES  |     | NULL    |       |
+| did     | varchar(3)  | YES  | MUL | NULL    |       |
+| pid     | varchar(3)  | YES  | MUL | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> create table olddetails
+    -> (
+    -> empid int,
+    -> ename varchar(20),
+    -> DOJ date,
+    -> DOB date,
+    -> salary int,
+    -> address varchar(30),
+    -> did varchar(3),
+    -> pid varchar(3)
+    -> );
+Query OK, 0 rows affected (0.34 sec)
+
+mysql> alter table olddetails
+    -> add column changetime datetime;
+Query OK, 0 rows affected (0.47 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc olddetails;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| empid      | int(11)     | YES  |     | NULL    |       |
+| ename      | varchar(20) | YES  |     | NULL    |       |
+| DOJ        | date        | YES  |     | NULL    |       |
+| DOB        | date        | YES  |     | NULL    |       |
+| salary     | int(11)     | YES  |     | NULL    |       |
+| address    | varchar(30) | YES  |     | NULL    |       |
+| did        | varchar(3)  | YES  |     | NULL    |       |
+| pid        | varchar(3)  | YES  |     | NULL    |       |
+| changetime | datetime    | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+9 rows in set (0.00 sec)
+
+mysql> delimiter $$
+mysql> create trigger uptrig
+    -> before update on employee
+    -> for each row
+    -> begin
+    -> insert into olddetails values(old.empid,old.ename,old.DOJ,old.DOB,old.salary,old.address,old.did,old.pid,now());
+    -> end $$
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> delimiter ;
+mysql> update employee
+    -> set salary=salary+0.05*salary
+    -> where did!='CMP';
+Query OK, 3 rows affected (0.07 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  72450 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from olddetails;
++-------+----------+------------+------------+--------+---------+------+------+---------------------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  | changetime          |
++-------+----------+------------+------------+--------+---------+------+------+---------------------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  | 2018-10-24 20:49:33 |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  | 2018-10-24 20:49:33 |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  | 2018-10-24 20:49:33 |
++-------+----------+------------+------------+--------+---------+------+------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> delimiter $$
+mysql> create trigger deltrig
+    -> before delete on employee
+    -> for each row
+    -> begin
+    -> insert into olddetails values(old.empid,old.ename,old.DOJ,old.DOB,old.salary,old.address,old.did,old.pid,now());
+    -> end $$
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> delete from employee
+    -> where address='d-pune';
+    -> $$
+Query OK, 1 row affected (0.06 sec)
+
+mysql> delimiter ;
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  72450 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from olddetails;
++-------+----------+------------+------------+--------+---------+------+------+---------------------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  | changetime          |
++-------+----------+------------+------------+--------+---------+------+------+---------------------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  | 2018-10-24 20:49:33 |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  | 2018-10-24 20:49:33 |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  | 2018-10-24 20:49:33 |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  | 2018-10-24 20:52:53 |
++-------+----------+------------+------------+--------+---------+------+------+---------------------+
+4 rows in set (0.00 sec)
+
+mysql> show triggers;
++---------+--------+----------+----------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-------------------------------------------------------------------------------------------------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| Trigger | Event  | Table    | Statement                                                                                                                  | Timing | Created                | sql_mode                                                                                                                                  | Definer        | character_set_client | collation_connection | Database Collation |
++---------+--------+----------+----------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-------------------------------------------------------------------------------------------------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+| uptrig  | UPDATE | employee | begin
+insert into olddetails values(old.empid,old.ename,old.DOJ,old.DOB,old.salary,old.address,old.did,old.pid,now());
+end | BEFORE | 2018-10-24 20:48:50.78 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION | root@localhost | utf8                 | utf8_general_ci      | latin1_swedish_ci  |
+| deltrig | DELETE | employee | begin
+insert into olddetails values(old.empid,old.ename,old.DOJ,old.DOB,old.salary,old.address,old.did,old.pid,now());
+end | BEFORE | 2018-10-24 20:52:11.79 | ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION | root@localhost | utf8                 | utf8_general_ci      | latin1_swedish_ci  |
++---------+--------+----------+----------------------------------------------------------------------------------------------------------------------------+--------+------------------------+-------------------------------------------------------------------------------------------------------------------------------------------+----------------+----------------------+----------------------+--------------------+
+2 rows in set (0.00 sec)
+
+

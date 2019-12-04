@@ -1,0 +1,198 @@
+--------------ASSIGN-6-------------------
+
+---------procedure----------------
+
+mysql> select * from employee;
++-------+-----------+------------+------------+--------+---------+------+------+
+| empid | ename     | DOJ        | DOB        | salary | address | did  | pid  |
++-------+-----------+------------+------------+--------+---------+------+------+
+|     1 | puspender | 2017-09-09 | 1994-01-03 |  83000 | j-pune  | IT   | AND  |
+|     2 | brijesh   | 2013-08-24 | 1996-10-03 |  99000 | b-pune  | CMP  | IMG  |
+|     3 | ravi      | 2013-09-09 | 1994-11-03 |  40000 | k-pune  | IT   | ML   |
+|     6 | abhishek  | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank   | 2011-11-12 | 1998-06-22 |  78000 | g-pune  | CMP  | ML   |
+|     8 | Aman      | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC   | ARD  |
+|     9 | rajesh    | 2018-09-09 | 1996-01-03 |  77000 | i-pune  | IT   | ML   |
++-------+-----------+------------+------------+--------+---------+------+------+
+7 rows in set (0.00 sec)
+
+mysql> delimiter $$
+mysql> drop procedure if exists empclass$$
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> create procedure empclass(id int)
+    -> begin
+    -> declare sal int;
+    -> select salary into sal from employee where empid=id;
+    -> if sal<5000 then
+    -> select 'class IV';
+    -> elseif sal>=5000 && sal<=50000 then
+    -> select 'class III';
+    -> elseif sal>5000 && sal<80000 then
+    -> select 'class II';
+    -> elseif sal>=80000 && sal<100000 then
+    -> select 'class I';
+    -> end if;
+    -> end$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> call empclass(1);
+    -> $$
++---------+
+| class I |
++---------+
+| class I |
++---------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call empclass(2);
+    -> $$
++---------+
+| class I |
++---------+
+| class I |
++---------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call empclass(3);
++-----------+
+| class III |
++-----------+
+| class III |
++-----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call empclass(7);
++----------+
+| class II |
++----------+
+| class II |
++----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call empclass(9);
++----------+
+| class II |
++----------+
+| class II |
++----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call empclass(22);
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+
+-----------------------------------------------------
+
+-----------------function------------------
+
+mysql> delimiter $$
+mysql> drop function if exists emplstatus$$
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> create function emplstatus(id int) returns varchar(10)
+    -> begin
+    -> declare sal int;
+    -> declare class varchar(10);
+    -> select salary into sal from employee where id=empid;
+    -> if sal<50000 then
+    -> set class='IV';
+    -> elseif sal>=50000 && sal<60000 then
+    -> set class='III';
+    -> elseif sal>=60000 && sal<81000 then
+    -> set class='II';
+    -> elseif sal>=81000 then
+    -> set class='I';
+    -> end if;
+    -> return(class);
+    -> end$$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select emplstatus(1);
+    -> $$
++---------------+
+| emplstatus(1) |
++---------------+
+| I             |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> delimiter ;
+mysql> select emplstatus(2);
++---------------+
+| emplstatus(2) |
++---------------+
+| I             |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select emplstatus(3);
++---------------+
+| emplstatus(3) |
++---------------+
+| IV            |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select emplstatus(4);
++---------------+
+| emplstatus(4) |
++---------------+
+| NULL          |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select emplstatus(5);
++---------------+
+| emplstatus(5) |
++---------------+
+| NULL          |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select emplstatus(6);
++---------------+
+| emplstatus(6) |
++---------------+
+| II            |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select emplstatus(7);
++---------------+
+| emplstatus(7) |
++---------------+
+| II            |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select emplstatus(8);
++---------------+
+| emplstatus(8) |
++---------------+
+| II            |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> select emplstatus(9);
++---------------+
+| emplstatus(9) |
++---------------+
+| II            |
++---------------+
+1 row in set (0.00 sec)
+--------------------------------------------
+

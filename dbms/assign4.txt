@@ -1,0 +1,585 @@
+----------------------------ASSIGN 4-------------------------------
+
+mysql> 
+mysql> use ab;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++--------------+
+| Tables_in_ab |
++--------------+
+| department   |
+| employee     |
+| project      |
++--------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from employee where empid in (2,7);
++-------+---------+------------+------------+--------+---------+------+------+
+| empid | ename   | DOJ        | DOB        | salary | address | did  | pid  |
++-------+---------+------------+------------+--------+---------+------+------+
+|     2 | brijesh | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     7 | sashank | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+---------+------------+------------+--------+---------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee where empid in [2,7];
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[2,7]' at line 1
+mysql> 
+mysql> select * from employee where empid in (2,1,3,4);
++-------+---------+------------+------------+--------+---------+------+------+
+| empid | ename   | DOJ        | DOB        | salary | address | did  | pid  |
++-------+---------+------------+------------+--------+---------+------+------+
+|     1 | ramesh  | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh  | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
++-------+---------+------------+------------+--------+---------+------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where empid not in (2,1,3,4);
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee
+    -> where did IN
+    -> (select did from employee
+    -> pid='IMG' OR 'ARD');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '='IMG' OR 'ARD')' at line 4
+mysql> 
+mysql> select * from employee where did IN (select did from employee pid='IMG');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '='IMG')' at line 1
+mysql> 
+mysql> select * from employee
+    -> where did IN
+    -> (select did from employee
+    -> where salary>=92000);
++-------+---------+------------+------------+--------+---------+------+------+
+| empid | ename   | DOJ        | DOB        | salary | address | did  | pid  |
++-------+---------+------------+------------+--------+---------+------+------+
+|     1 | ramesh  | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh  | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     7 | sashank | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+---------+------------+------------+--------+---------+------+------+
+4 rows in set (0.03 sec)
+
+mysql> select * from employee where did NOT IN (select did from employee where salary>=92000);
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee
+    -> where did IN
+    -> (select Did from department
+    -> where dname='EC');
+Empty set (0.00 sec)
+
+mysql> select * from department;
++-----+-------------+
+| Did | dname       |
++-----+-------------+
+| CMP | COMPUTER    |
+| EC  | ELECTRONICS |
+| IT  | INFORMATION |
+| MEC | MECHANICAL  |
++-----+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from employee where did IN (select Did from department where dname='ELECTRONICS');
++-------+-------+------------+------------+--------+---------+------+------+
+| empid | ename | DOJ        | DOB        | salary | address | did  | pid  |
++-------+-------+------------+------------+--------+---------+------+------+
+|     8 | Aman  | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+-------+------------+------------+--------+---------+------+------+
+1 row in set (0.03 sec)
+
+mysql> select * from employee where did NOT IN (select Did from department where dname='ELECTRONICS');
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.01 sec)
+
+mysql> select * from employee where did IN (select Did from department where dname='COMPUTER');
++-------+---------+------------+------------+--------+---------+------+------+
+| empid | ename   | DOJ        | DOB        | salary | address | did  | pid  |
++-------+---------+------------+------------+--------+---------+------+------+
+|     2 | brijesh | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh  | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     7 | sashank | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+---------+------------+------------+--------+---------+------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where pid IN (select Pid from project where pname='CLOUD');
+Empty set (0.00 sec)
+
+mysql> select * from project
+    -> ;
++-----+------------+------+
+| Pid | pname      | Lid  |
++-----+------------+------+
+| AND | ANDROID    | lko  |
+| ARD | ARDUINO    | lko  |
+| CLD | CLOUD.COMP | jhan |
+| IMG | IMG.PROCE. | beng |
+| ML  | MACHIN_L.  | pun  |
++-----+------------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee where pid IN (select Pid from project where pname='CLOUD.COMP');
++-------+--------+------------+------------+--------+---------+------+------+
+| empid | ename  | DOJ        | DOB        | salary | address | did  | pid  |
++-------+--------+------------+------------+--------+---------+------+------+
+|     1 | ramesh | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
++-------+--------+------------+------------+--------+---------+------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where pid NOT IN (select Pid from project where pname='CLOUD.COMP');
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee where pid NOT IN (select pid for employee where did='CMP' and pid='IMG');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employee where did='CMP' and pid='IMG')' at line 1
+mysql> 
+mysql> select * from employee where pid NOT IN (select pid for employee where did='CMP' OR did='ML');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employee where did='CMP' OR did='ML')' at line 1
+mysql> 
+mysql> 
+mysql> update employee
+    -> set salary=salary+0.5*salary
+    -> where empid IN
+    -> (select empid from employee where salary=92000);
+ERROR 1093 (HY000): You can't specify target table 'employee' for update in FROM clause
+mysql> 
+mysql> update employee set salary=salary+0.5*salary where did IN (select Did from department where dname='INFORMATION');
+Query OK, 1 row affected (0.07 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 | 138000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> update employee set salary=salary-0.5*salary where did IN (select Did from department where dname='INFORMATION');
+Query OK, 1 row affected (0.06 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> delete from employee
+    -> where empid IN
+    -> (select empid from employee
+    -> where pid='MEC');
+ERROR 1093 (HY000): You can't specify target table 'employee' for update in FROM clause
+mysql> 
+mysql> 
+mysql> select * from employee where empid<some(select empid from employee );
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from employee where empid<some(select empid from employee );
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee where empid<all(select empid from employee );
+Empty set (0.00 sec)
+
+mysql> select * from employee where empid>some(select empid from employee );
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee where empid>all(select empid from employee );
+Empty set (0.00 sec)
+
+mysql> select * from employee where empid>any(select empid from employee );
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee where empid<any(select empid from employee );
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee where did<some(select Did from department);
++-------+---------+------------+------------+--------+---------+------+------+
+| empid | ename   | DOJ        | DOB        | salary | address | did  | pid  |
++-------+---------+------------+------------+--------+---------+------+------+
+|     1 | ramesh  | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh  | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     7 | sashank | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman    | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+---------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from department;
++-----+-------------+
+| Did | dname       |
++-----+-------------+
+| CMP | COMPUTER    |
+| EC  | ELECTRONICS |
+| IT  | INFORMATION |
+| MEC | MECHANICAL  |
++-----+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from employee where did>some(select Did from department);
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where salary>some(select salary from employee);
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from employee where salary<some(select salary from employee);
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where salary<>some(select salary from employee);
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from employee where salary<all(select salary from employee);
+Empty set (0.00 sec)
+
+mysql> select * from employee where salary<(select salary from employee);
+ERROR 1242 (21000): Subquery returns more than 1 row
+mysql> 
+mysql> select did,avg(salary) from employee 
+    -> group by did
+    -> having avg(salary)>=(select avg(salary) from employee);
++------+-------------+
+| did  | avg(salary) |
++------+-------------+
+| CMP  |  92000.0000 |
++------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(salary) from employee;
++-------------+
+| avg(salary) |
++-------------+
+|  78166.6667 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select did,avg(salary) from employee  group by did having avg(salary)>some(select avg(salary) from employee);
++------+-------------+
+| did  | avg(salary) |
++------+-------------+
+| CMP  |  92000.0000 |
++------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select did,avg(salary) from employee  group by did having avg(salary)>all(select avg(salary) from employee);
++------+-------------+
+| did  | avg(salary) |
++------+-------------+
+| CMP  |  92000.0000 |
++------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select did,avg(salary) from employee  group by did having avg(salary)>all(select avg(salary) from employee group by did);
+Empty set (0.00 sec)
+
+mysql> select name,did,salary from employee
+    -> where pid=any(select pid from project where Lid='pun');
+ERROR 1054 (42S22): Unknown column 'name' in 'field list'
+mysql> 
+mysql> select ename,did,salary from employee where pid=any(select pid from project where Lid='pun');
++---------+------+--------+
+| ename   | did  | salary |
++---------+------+--------+
+| sashank | CMP  |  92000 |
++---------+------+--------+
+1 row in set (0.00 sec)
+
+mysql> select ename,did,salary from employee where pid=all(select pid from project where Lid='pun');
++---------+------+--------+
+| ename   | did  | salary |
++---------+------+--------+
+| sashank | CMP  |  92000 |
++---------+------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from pun;
+ERROR 1146 (42S02): Table 'ab.pun' doesn't exist
+mysql> 
+mysql> select * from project;
++-----+------------+------+
+| Pid | pname      | Lid  |
++-----+------------+------+
+| AND | ANDROID    | lko  |
+| ARD | ARDUINO    | lko  |
+| CLD | CLOUD.COMP | jhan |
+| IMG | IMG.PROCE. | beng |
+| ML  | MACHIN_L.  | pun  |
++-----+------------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from department;
++-----+-------------+
+| Did | dname       |
++-----+-------------+
+| CMP | COMPUTER    |
+| EC  | ELECTRONICS |
+| IT  | INFORMATION |
+| MEC | MECHANICAL  |
++-----+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from project;
++-----+------------+------+
+| Pid | pname      | Lid  |
++-----+------------+------+
+| AND | ANDROID    | lko  |
+| ARD | ARDUINO    | lko  |
+| CLD | CLOUD.COMP | jhan |
+| IMG | IMG.PROCE. | beng |
+| ML  | MACHIN_L.  | pun  |
++-----+------------+------+
+5 rows in set (0.00 sec)
+
+mysql> select ename,DOJ,salary 
+    -> from employee
+    -> where exists(select * from employee where address=employee.address);
++----------+------------+--------+
+| ename    | DOJ        | salary |
++----------+------------+--------+
+| ramesh   | 2013-11-11 |  69000 |
+| brijesh  | 2013-08-24 |  92000 |
+| suresh   | 2016-08-22 |  92000 |
+| abhishek | 2014-11-11 |  66000 |
+| sashank  | 2011-11-12 |  92000 |
+| Aman     | 2014-02-02 |  58000 |
++----------+------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select ename,DOJ,salary  from employee where exists(select * from employee where empid=employee.address);
+Empty set, 6 warnings (0.00 sec)
+
+mysql> select ename,DOJ,salary  from employee where exists(select * from employee where empid=employee.empid/2);
+Empty set (0.00 sec)
+
+mysql> select ename,DOJ,salary  from employee where exists(select * from employee where empid=employee.empid);
++----------+------------+--------+
+| ename    | DOJ        | salary |
++----------+------------+--------+
+| ramesh   | 2013-11-11 |  69000 |
+| brijesh  | 2013-08-24 |  92000 |
+| suresh   | 2016-08-22 |  92000 |
+| abhishek | 2014-11-11 |  66000 |
+| sashank  | 2011-11-12 |  92000 |
+| Aman     | 2014-02-02 |  58000 |
++----------+------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select ename,salary from employee
+    -> where salary>all(select salary from employee where pid='AND');
++---------+--------+
+| ename   | salary |
++---------+--------+
+| ramesh  |  69000 |
+| brijesh |  92000 |
+| suresh  |  92000 |
+| sashank |  92000 |
++---------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select * from employee
+    -> where exists(sele;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'sele' at line 2
+mysql> 
+mysql> 
+mysql> select * from employee
+    -> as e
+    -> where exists(select * from department as d where e.did=d=Did);
+ERROR 1054 (42S22): Unknown column 'd' in 'where clause'
+mysql> 
+mysql> 
+mysql> select * from employee as e where exists(select * from department as d where e.did=d.Did);
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  69000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from department as d where not exists(select did from employee as e where d.Did=e.did);
++-----+------------+
+| Did | dname      |
++-----+------------+
+| CHM | CHEMICAL   |
+| ELC | ELECTRICAL |
++-----+------------+
+
+

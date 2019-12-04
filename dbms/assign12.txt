@@ -1,0 +1,132 @@
+------------------------------------ASSIGNMENT-12---------------------------
+
+MongoDB shell version: 2.6.10
+connecting to: test
+> use abl
+switched to db abl
+> use ab;
+switched to db ab
+> show collections
+employee
+kk
+kk1
+student
+system.indexes
+> db.employee.find().pretty()
+{
+	"_id" : ObjectId("5bd1da7a1916704d89215c26"),
+	"id" : 1,
+	"name" : "abhi",
+	"salary" : 34000,
+	"department" : "CS"
+}
+{
+	"_id" : ObjectId("5bd1da8a1916704d89215c27"),
+	"id" : 2,
+	"name" : "vikas",
+	"salary" : 6000,
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1dacf1916704d89215c2a"),
+	"id" : 5,
+	"name" : "nitesh",
+	"salary" : 9000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1db001916704d89215c2b"),
+	"id" : 5,
+	"name" : "vijay",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e62f1916704d89215c2d"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd2091bad44d353a8810750"),
+	"id" : 12,
+	"name" : "raja",
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd20929ad44d353a8810751"),
+	"id" : 13,
+	"name" : "dhanush",
+	"department" : "CS"
+}
+{
+	"_id" : ObjectId("5bd20937ad44d353a8810752"),
+	"id" : 14,
+	"name" : "pankaj",
+	"department" : "IT"
+}
+> 
+> 
+> db.employee.mapReduce(function(){emit(this.department,this.salary)},
+function(department,totalsalary){return Array.sum(totalsalary)},{out:'sumM'})
+{
+	"result" : "sumM",
+	"timeMillis" : 25,
+	"counts" : {
+		"input" : 9,
+		"emit" : 9,
+		"reduce" : 4,
+		"output" : 4
+	},
+	"ok" : 1
+}
+> db.sumM.find().pretty()
+{ "_id" : "COMP", "value" : 6000 }
+{ "_id" : "CS", "value" : 34000 }
+{ "_id" : "ENTC", "value" : 29000 }
+{ "_id" : "IT", "value" : 7000 }
+> 
+
+
+> db.employee.mapReduce(function(){emit(this.department,this.salary)},
+ function(department,avgsalary){return Array.avg(avgsalary)},
+ {out:"AVGG"}
+ )
+{
+	"result" : "AVGG",
+	"timeMillis" : 5,
+	"counts" : {
+		"input" : 9,
+		"emit" : 9,
+		"reduce" : 4,
+		"output" : 4
+	},
+	"ok" : 1
+}
+> db.AVGG.find()
+{ "_id" : "COMP", "value" : 3000 }
+{ "_id" : "CS", "value" : 17000 }
+{ "_id" : "ENTC", "value" : 9666.666666666666 }
+{ "_id" : "IT", "value" : 3500 }
+> 
+
+
+> show collections;
+AVGG
+AVGG1
+employee
+kk
+kk1
+student
+sumM
+system.indexes
+
+

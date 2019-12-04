@@ -1,0 +1,630 @@
+--------------------------ASSINGMENT-10--------------------
+
+> show dbs;
+ab     0.078GB
+admin  (empty)
+local  0.078GB
+mydb   0.078GB
+> use ab;
+switched to db ab
+> show collections;
+employee
+student
+system.indexes
+-------------------------------find--------------------------------------------------------------------
+> db.employee.find().pretty()
+{
+	"_id" : ObjectId("5bd1da7a1916704d89215c26"),
+	"id" : 1,
+	"name" : "abhi",
+	"salary" : 5000,
+	"department" : "CS"
+}
+{
+	"_id" : ObjectId("5bd1da8a1916704d89215c27"),
+	"id" : 2,
+	"name" : "vikas",
+	"salary" : 6000,
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1daba1916704d89215c29"),
+	"id" : 4,
+	"name" : "raju",
+	"salary" : 8000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1dacf1916704d89215c2a"),
+	"id" : 5,
+	"name" : "nitesh",
+	"salary" : 9000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1db001916704d89215c2b"),
+	"id" : 5,
+	"name" : "vijay",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e4de1916704d89215c2c"),
+	"id" : 5,
+	"name" : null,
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e62f1916704d89215c2d"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e7341916704d89215c2e"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : [
+		"ENTC",
+		"ELECTRICAL"
+	]
+}
+> db.employee.findOne().pretty()
+2018-10-25T21:27:10.030+0530 TypeError: Object [object Object] has no method 'pretty'
+> 
+-------------------------------findOne--------------------------------------------------------------------
+> db.employee.findOne()
+{
+	"_id" : ObjectId("5bd1da7a1916704d89215c26"),
+	"id" : 1,
+	"name" : "abhi",
+	"salary" : 5000,
+	"department" : "CS"
+}
+> db.employee.findOne({id:5})
+{
+	"_id" : ObjectId("5bd1dacf1916704d89215c2a"),
+	"id" : 5,
+	"name" : "nitesh",
+	"salary" : 9000,
+	"department" : "ENTC"
+
+
+}
+-------------------------------QUERY CONDITIONALS--------------------------------------------------------------------
+> db.employee.find({id:{$gte:8}}).pretty()
+{
+	"_id" : ObjectId("5bd1e62f1916704d89215c2d"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e7341916704d89215c2e"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : [
+		"ENTC",
+		"ELECTRICAL"
+	]
+}
+> db.employee.find({id:{$gt:8}}).pretty()
+> db.employee.find({id:{$lt:4}}).pretty()
+{
+	"_id" : ObjectId("5bd1da7a1916704d89215c26"),
+	"id" : 1,
+	"name" : "abhi",
+	"salary" : 5000,
+	"department" : "CS"
+}
+{
+	"_id" : ObjectId("5bd1da8a1916704d89215c27"),
+	"id" : 2,
+	"name" : "vikas",
+	"salary" : 6000,
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+> db.employee.find({id:{$lte:4}}).pretty()
+{
+	"_id" : ObjectId("5bd1da7a1916704d89215c26"),
+	"id" : 1,
+	"name" : "abhi",
+	"salary" : 5000,
+	"department" : "CS"
+}
+{
+	"_id" : ObjectId("5bd1da8a1916704d89215c27"),
+	"id" : 2,
+	"name" : "vikas",
+	"salary" : 6000,
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1daba1916704d89215c29"),
+	"id" : 4,
+	"name" : "raju",
+	"salary" : 8000,
+	"department" : "IT"
+}
+> db.employee.find({id:{$eq:4}}).pretty()
+{
+	"_id" : ObjectId("5bd1daba1916704d89215c29"),
+	"id" : 4,
+	"name" : "raju",
+	"salary" : 8000,
+	"department" : "IT"
+}
+> db.employee.find({id:{$ne:2}}).pretty()
+{
+	"_id" : ObjectId("5bd1da7a1916704d89215c26"),
+	"id" : 1,
+	"name" : "abhi",
+	"salary" : 5000,
+	"department" : "CS"
+}
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1daba1916704d89215c29"),
+	"id" : 4,
+	"name" : "raju",
+	"salary" : 8000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1dacf1916704d89215c2a"),
+	"id" : 5,
+	"name" : "nitesh",
+	"salary" : 9000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1db001916704d89215c2b"),
+	"id" : 5,
+	"name" : "vijay",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e4de1916704d89215c2c"),
+	"id" : 5,
+	"name" : null,
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e62f1916704d89215c2d"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e7341916704d89215c2e"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : [
+		"ENTC",
+		"ELECTRICAL"
+	]
+}
+-------------------------------OR-QUERIES--------------------------------------------------------------------
+> db.employee.find(
+... {
+...   $or:
+...        [
+...           { name:{$eq:"vijay"}}
+...            ,
+...              {
+...                 salary:{$eq:5000}}
+...        ]
+... }
+... ).pretty()
+{
+	"_id" : ObjectId("5bd1da7a1916704d89215c26"),
+	"id" : 1,
+	"name" : "abhi",
+	"salary" : 5000,
+	"department" : "CS"
+}
+{
+	"_id" : ObjectId("5bd1db001916704d89215c2b"),
+	"id" : 5,
+	"name" : "vijay",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+> db.employee.find( {   $or:        [           { department:{$eq:"IT"}}            ,              {                 salary:{$eq:9000}}        ] } ).pretty()
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1daba1916704d89215c29"),
+	"id" : 4,
+	"name" : "raju",
+	"salary" : 8000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1dacf1916704d89215c2a"),
+	"id" : 5,
+	"name" : "nitesh",
+	"salary" : 9000,
+	"department" : "ENTC"
+}
+> 
+> 
+-------------------------------NOT-QUERIES--------------------------------------------------------------------
+> db.employee.find({salary:{$not:{$eq:10000}}}).pretty()
+{
+	"_id" : ObjectId("5bd1da7a1916704d89215c26"),
+	"id" : 1,
+	"name" : "abhi",
+	"salary" : 5000,
+	"department" : "CS"
+}
+{
+	"_id" : ObjectId("5bd1da8a1916704d89215c27"),
+	"id" : 2,
+	"name" : "vikas",
+	"salary" : 6000,
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1daba1916704d89215c29"),
+	"id" : 4,
+	"name" : "raju",
+	"salary" : 8000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1dacf1916704d89215c2a"),
+	"id" : 5,
+	"name" : "nitesh",
+	"salary" : 9000,
+	"department" : "ENTC"
+}
+> 
+> db.employee.find({department:{$not:{$eq:"ENTC"}}}).pretty()
+{
+	"_id" : ObjectId("5bd1da7a1916704d89215c26"),
+	"id" : 1,
+	"name" : "abhi",
+	"salary" : 5000,
+	"department" : "CS"
+}
+{
+	"_id" : ObjectId("5bd1da8a1916704d89215c27"),
+	"id" : 2,
+	"name" : "vikas",
+	"salary" : 6000,
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1daba1916704d89215c29"),
+	"id" : 4,
+	"name" : "raju",
+	"salary" : 8000,
+	"department" : "IT"
+}
+> 
+> 
+-------------------------------conditional semantics--------------------------------------------------------------------
+> db.employee.find({salary:{$gt:6000,$lt:8000}}).pretty()
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+> db.employee.insert({id:11,name:null,salary:41000,department:"COMP"});
+WriteResult({ "nInserted" : 1 })
+> db.employee.find().pretty()
+{
+	"_id" : ObjectId("5bd1da7a1916704d89215c26"),
+	"id" : 1,
+	"name" : "abhi",
+	"salary" : 5000,
+	"department" : "CS"
+}
+{
+	"_id" : ObjectId("5bd1da8a1916704d89215c27"),
+	"id" : 2,
+	"name" : "vikas",
+	"salary" : 6000,
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1daba1916704d89215c29"),
+	"id" : 4,
+	"name" : "raju",
+	"salary" : 8000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1dacf1916704d89215c2a"),
+	"id" : 5,
+	"name" : "nitesh",
+	"salary" : 9000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1db001916704d89215c2b"),
+	"id" : 5,
+	"name" : "vijay",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e4de1916704d89215c2c"),
+	"id" : 5,
+	"name" : null,
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e62f1916704d89215c2d"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e7341916704d89215c2e"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : [
+		"ENTC",
+		"ELECTRICAL"
+	]
+}
+{
+	"_id" : ObjectId("5bd1ea5c8e8b76ced19f58ff"),
+	"id" : 11,
+	"name" : null,
+	"salary" : 41000,
+	"department" : "COMP"
+}
+-------------------------------REGULAR EXPRESSION--------------------------------------------------------------------
+> db.employee.find({name:{$regex:'v.*'}}).pretty()
+{
+	"_id" : ObjectId("5bd1da8a1916704d89215c27"),
+	"id" : 2,
+	"name" : "vikas",
+	"salary" : 6000,
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1db001916704d89215c2b"),
+	"id" : 5,
+	"name" : "vijay",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+> db.employee.find({name:{$regex:/r/}}).pretty()
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1daba1916704d89215c29"),
+	"id" : 4,
+	"name" : "raju",
+	"salary" : 8000,
+	"department" : "IT"
+}
+> db.employee.find({name:{$regex:/r/i}}).pretty()
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1daba1916704d89215c29"),
+	"id" : 4,
+	"name" : "raju",
+	"salary" : 8000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1e62f1916704d89215c2d"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e7341916704d89215c2e"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : [
+		"ENTC",
+		"ELECTRICAL"
+	]
+}
+-------------------------------QUERYING ARRAYS--------------------------------------------------------------------
+> db.employee.insert({id:11,name:null,salary:41000,department:["COMP","CS","INFORMATION"]});
+WriteResult({ "nInserted" : 1 })
+> db.employee.find().pretty()
+{
+	"_id" : ObjectId("5bd1da7a1916704d89215c26"),
+	"id" : 1,
+	"name" : "abhi",
+	"salary" : 5000,
+	"department" : "CS"
+}
+{
+	"_id" : ObjectId("5bd1da8a1916704d89215c27"),
+	"id" : 2,
+	"name" : "vikas",
+	"salary" : 6000,
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1daac1916704d89215c28"),
+	"id" : 3,
+	"name" : "rajesh",
+	"salary" : 7000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1daba1916704d89215c29"),
+	"id" : 4,
+	"name" : "raju",
+	"salary" : 8000,
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd1dacf1916704d89215c2a"),
+	"id" : 5,
+	"name" : "nitesh",
+	"salary" : 9000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1db001916704d89215c2b"),
+	"id" : 5,
+	"name" : "vijay",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e4de1916704d89215c2c"),
+	"id" : 5,
+	"name" : null,
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e62f1916704d89215c2d"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : "ENTC"
+}
+{
+	"_id" : ObjectId("5bd1e7341916704d89215c2e"),
+	"id" : 8,
+	"name" : "RAMU",
+	"salary" : 10000,
+	"department" : [
+		"ENTC",
+		"ELECTRICAL"
+	]
+}
+{
+	"_id" : ObjectId("5bd1ea5c8e8b76ced19f58ff"),
+	"id" : 11,
+	"name" : null,
+	"salary" : 41000,
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1eaf68e8b76ced19f5900"),
+	"id" : 11,
+	"name" : null,
+	"salary" : 41000,
+	"department" : [
+		"COMP",
+		"CS",
+		"INFORMATION"
+	]
+}
+> db.employee.find(department:"INFORMATION").pretty()
+2018-10-25T21:40:51.917+0530 SyntaxError: Unexpected token :
+> 
+> db.employee.find({department:"INFORMATION"}).pretty()
+{
+	"_id" : ObjectId("5bd1eaf68e8b76ced19f5900"),
+	"id" : 11,
+	"name" : null,
+	"salary" : 41000,
+	"department" : [
+		"COMP",
+		"CS",
+		"INFORMATION"
+	]
+}
+> db.employee.find({department:"COMP","CS","INFORMATION"}).pretty()
+2018-10-25T21:41:30.189+0530 SyntaxError: Unexpected token ,
+> 
+> db.employee.find({department:["COMP","CS","INFORMATION"]}).pretty()
+{
+	"_id" : ObjectId("5bd1eaf68e8b76ced19f5900"),
+	"id" : 11,
+	"name" : null,
+	"salary" : 41000,
+	"department" : [
+		"COMP",
+		"CS",
+		"INFORMATION"
+	]
+}
+> 
+------------------------------------------------------------------------------------------------------------
+

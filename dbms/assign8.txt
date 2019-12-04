@@ -1,0 +1,273 @@
+-------------------------------------ASSIGN-8-----------------------------
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  72450 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> create view v as
+    -> select * from employee
+    -> where did!='EC';
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> show tables;
++--------------+
+| Tables_in_ab |
++--------------+
+| department   |
+| employee     |
+| olddetails   |
+| project      |
+| v            |
++--------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from v;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  72450 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> update v
+    -> set salary=91000
+    -> where did='IT';
+Query OK, 1 row affected (0.06 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from v;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  91000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+4 rows in set (0.01 sec)
+
+mysql> select avg(salary) from v;
++-------------+
+| avg(salary) |
++-------------+
+|  86075.0000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(salary) from employee;
++-------------+
+| avg(salary) |
++-------------+
+|  81040.0000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  91000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+
+mysql> create view v2 as
+    -> select did,sum(salary)
+    -> from employee
+    -> group by did;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> select * from v2;
++------+-------------+
+| did  | sum(salary) |
++------+-------------+
+| CMP  |      184000 |
+| EC   |       60900 |
+| IT   |       91000 |
+| MEC  |       69300 |
++------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> create view v4 as
+    -> select employee.empid,employee.ename,employee.DOJ,employee.DOB,employee.salary,employee.address,department.Did,department.dname
+    -> from employee
+    -> inner join department on employee.did=department.Did;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> select * from v4;
++-------+----------+------------+------------+--------+---------+-----+-------------+
+| empid | ename    | DOJ        | DOB        | salary | address | Did | dname       |
++-------+----------+------------+------------+--------+---------+-----+-------------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  91000 | a-pune  | IT  | INFORMATION |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP | COMPUTER    |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC | MECHANICAL  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP | COMPUTER    |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC  | ELECTRONICS |
++-------+----------+------------+------------+--------+---------+-----+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select sum(salary) from v4;
++-------------+
+| sum(salary) |
++-------------+
+|      405200 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> create view v5 as select employee.empid,employee.ename,employee.DOJ,employee.DOB,employee.salary,employee.address,department.Did,department.dname from department left join employee on employee.did=department.Did;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> select * from v5;
++-------+----------+------------+------------+--------+---------+-----+-------------+
+| empid | ename    | DOJ        | DOB        | salary | address | Did | dname       |
++-------+----------+------------+------------+--------+---------+-----+-------------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  91000 | a-pune  | IT  | INFORMATION |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP | COMPUTER    |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC | MECHANICAL  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP | COMPUTER    |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC  | ELECTRONICS |
+|  NULL | NULL     | NULL       | NULL       |   NULL | NULL    | CHM | CHEMICAL    |
+|  NULL | NULL     | NULL       | NULL       |   NULL | NULL    | ELC | ELECTRICAL  |
++-------+----------+------------+------------+--------+---------+-----+-------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from department;
++-----+-------------+
+| Did | dname       |
++-----+-------------+
+| CHM | CHEMICAL    |
+| CMP | COMPUTER    |
+| EC  | ELECTRONICS |
+| ELC | ELECTRICAL  |
+| IT  | INFORMATION |
+| MEC | MECHANICAL  |
++-----+-------------+
+6 rows in set (0.00 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  91000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> create view v6 as select employee.empid,employee.ename,employee.DOJ,employee.DOB,employee.salary,employee.address,department.Did,department.dname from department right join employee on employee.did=department.Did;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> select * from v6;
++-------+----------+------------+------------+--------+---------+------+-------------+
+| empid | ename    | DOJ        | DOB        | salary | address | Did  | dname       |
++-------+----------+------------+------------+--------+---------+------+-------------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  91000 | a-pune  | IT   | INFORMATION |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | COMPUTER    |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | MECHANICAL  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | COMPUTER    |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC   | ELECTRONICS |
++-------+----------+------------+------------+--------+---------+------+-------------+
+5 rows in set (0.00 sec)
+
+
+mysql> update employee
+    -> set salary=0.5*salary+salary
+    -> where did in(select did from v);
+ERROR 1443 (HY000): The definition of table 'v' prevents operation UPDATE on table 'employee'.
+mysql> 
+
+
+mysql> update v
+    -> set salary=77000
+    -> where empid=7;
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from v;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  77000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+3 rows in set (0.01 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  77000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+4 rows in set (0.00 sec)
+
+
+mysql> select * from v;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  91000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> delete from v 
+    -> where empid=1;
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+4 rows in set (0.00 sec)
+
+mysql> create view v9 as
+    -> select did,avg(salary),sum(salary),count(salary),max(salary),min(salary)
+    -> from employee
+    -> group by did;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> select * from v9;
++------+-------------+-------------+---------------+-------------+-------------+
+| did  | avg(salary) | sum(salary) | count(salary) | max(salary) | min(salary) |
++------+-------------+-------------+---------------+-------------+-------------+
+| CMP  |  84500.0000 |      169000 |             2 |       92000 |       77000 |
+| EC   |  60900.0000 |       60900 |             1 |       60900 |       60900 |
+| MEC  |  69300.0000 |       69300 |             1 |       69300 |       69300 |
++------+-------------+-------------+---------------+-------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> drop view v6;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from v6;
+ERROR 1146 (42S02): Table 'ab.v6' doesn't exist
+mysql> 
+

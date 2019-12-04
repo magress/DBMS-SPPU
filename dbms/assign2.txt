@@ -1,0 +1,230 @@
+--------------------ASSIGNMENT 2------------------------
+
+
+mysql> show databases
+    -> ;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| ab                 |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> use ab;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++--------------+
+| Tables_in_ab |
++--------------+
+| department   |
+| employee     |
+| project      |
++--------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from department;
++-----+-------------+
+| Did | dname       |
++-----+-------------+
+| CMP | COMPUTER    |
+| EC  | ELECTRONICS |
+| IT  | INFORMATION |
+| MEC | MECHANICAL  |
++-----+-------------+
+4 rows in set (0.01 sec)
+
+mysql> select * from project;
++-----+------------+
+| Pid | pname      |
++-----+------------+
+| AND | ANDROID    |
+| ARD | ARDUINO    |
+| CLD | CLOUD.COMP |
+| IMG | IMG.PROCE. |
+| ML  | MACHIN_L.  |
++-----+------------+
+5 rows in set (0.00 sec)
+
+
+mysql> insert into employee values(8,'Aman','2014-02-02','1998-09-10',58000,'h-pune','EC','ARD');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into employee values(7,'sashank','2011-11-12','1998-06-22',62000,'g-pune','CMP','ML');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee values(6,'abhishek','2014-11-11','1998-07-12',66000,'f-pune','MEC','AND');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee values(5,'nitesh','2017-11-10','1998-06-28',90000,'e-pune','EC','ARD');
+Query OK, 1 row affected (0.13 sec)
+
+mysql> insert into employee values(4,'vikas','2017-10-10','1999-06-30',90000,'e-pune','EC','ARD');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee values(3,'suresh','2016-08-22','1997-06-27',86000,'d-pune','CMP','IMG');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee values(2,'brijesh','2013-08-24','1996-10-03',64000,'b-pune','CMP','IMG');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into employee values(1,'ramesh','2013-11-11','1996-09-23',83000,'a-pune','IT','CLD');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  83000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  64000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  86000 | d-pune  | CMP  | IMG  |
+|     4 | vikas    | 2017-10-10 | 1999-06-30 |  90000 | e-pune  | EC   | ARD  |
+|     5 | nitesh   | 2017-11-10 | 1998-06-28 |  90000 | e-pune  | EC   | ARD  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  62000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+8 rows in set (0.00 sec)
+
+mysql> select ename,salary from employee
+    -> where did='IT' OR did='CMP';
++---------+--------+
+| ename   | salary |
++---------+--------+
+| ramesh  |  83000 |
+| brijesh |  64000 |
+| suresh  |  86000 |
+| sashank |  62000 |
++---------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select ename,salary from employee where did='CMP' AND pid='IMG';
++---------+--------+
+| ename   | salary |
++---------+--------+
+| brijesh |  64000 |
+| suresh  |  86000 |
++---------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select ename,salary from employee where did!='CMP';
++----------+--------+
+| ename    | salary |
++----------+--------+
+| ramesh   |  83000 |
+| vikas    |  90000 |
+| nitesh   |  90000 |
+| abhishek |  66000 |
+| Aman     |  58000 |
++----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> update employee
+    -> set salary=92000
+    -> where did='CMP' OR did='IT';
+Query OK, 4 rows affected (0.06 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     4 | vikas    | 2017-10-10 | 1999-06-30 |  90000 | e-pune  | EC   | ARD  |
+|     5 | nitesh   | 2017-11-10 | 1998-06-28 |  90000 | e-pune  | EC   | ARD  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+8 rows in set (0.00 sec)
+
+mysql> delete from employee
+    -> where address='e-pune';
+Query OK, 2 rows affected (0.06 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from employee
+    -> where DOJ>='2014-02-02';
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee
+    -> where ename like '%k';
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee where ename like '%h';
++-------+---------+------------+------------+--------+---------+------+------+
+| empid | ename   | DOJ        | DOB        | salary | address | did  | pid  |
++-------+---------+------------+------------+--------+---------+------+------+
+|     1 | ramesh  | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh  | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
++-------+---------+------------+------------+--------+---------+------+------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where ename like '____';
++-------+-------+------------+------------+--------+---------+------+------+
+| empid | ename | DOJ        | DOB        | salary | address | did  | pid  |
++-------+-------+------------+------------+--------+---------+------+------+
+|     8 | Aman  | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+-------+------------+------------+--------+---------+------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+
+mysql> select ename,salary from employee where ename like '%k' AND pid like 'A%';
++----------+--------+
+| ename    | salary |
++----------+--------+
+| abhishek |  66000 |
++----------+--------+
+1 row in set (0.00 sec)
+
+
+
+
+

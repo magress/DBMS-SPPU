@@ -1,0 +1,633 @@
+
+raviraj@ABHI:~$ mongo
+MongoDB shell version: 2.6.10
+connecting to: test
+> show dbs;
+admin  (empty)
+local  0.078GB
+mydb   0.078GB
+> use ab;
+switched to db ab
+> db.createCollection("employee");
+{ "ok" : 1 }
+> db.employee.insert({id:"1",name:"raviraj",salary:"50000",department:"IT"});
+WriteResult({ "nInserted" : 1 })
+> db.employee.insert({id:"2",name:"vikas",salary:"60000",department:"ETC"});
+WriteResult({ "nInserted" : 1 })
+> db.employee.insert({id:"3",name:"pankaj",salary:"70000",department:"COMP"});
+WriteResult({ "nInserted" : 1 })
+> db.employee.insert({id:"4",name:"abhishek",salary:"80000",department:"MECH"});
+WriteResult({ "nInserted" : 1 })
+> db.student.find()
+> ;
+> db.student.find().pretty();
+> db.employee.find().pretty();
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "raviraj",
+	"salary" : "50000",
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC"
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1380fbeb96a7045450269"),
+	"id" : "4",
+	"name" : "abhishek",
+	"salary" : "80000",
+	"department" : "MECH"
+}
+> db.employee.find();
+{ "_id" : ObjectId("5bd137d0beb96a7045450266"), "id" : "1", "name" : "raviraj", "salary" : "50000", "department" : "IT" }
+{ "_id" : ObjectId("5bd137e2beb96a7045450267"), "id" : "2", "name" : "vikas", "salary" : "60000", "department" : "ETC" }
+{ "_id" : ObjectId("5bd137fabeb96a7045450268"), "id" : "3", "name" : "pankaj", "salary" : "70000", "department" : "COMP" }
+{ "_id" : ObjectId("5bd1380fbeb96a7045450269"), "id" : "4", "name" : "abhishek", "salary" : "80000", "department" : "MECH" }
+
+> 
+
+> 
+> db.student.update({id:"1",name:"raviraj"},{$set:{name:"abhinav"}});
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> db.employee.find().pretty();
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "raviraj",
+	"salary" : "50000",
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC"
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1380fbeb96a7045450269"),
+	"id" : "4",
+	"name" : "abhishek",
+	"salary" : "80000",
+	"department" : "MECH"
+}
+> 
+
+> db.employee.update({id:"1",name:"raviraj"},{$set:{name:"abhinav"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.employee.find().pretty();
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "abhinav",
+	"salary" : "50000",
+	"department" : "IT"
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC"
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bd1380fbeb96a7045450269"),
+	"id" : "4",
+	"name" : "abhishek",
+	"salary" : "80000",
+	"department" : "MECH"
+}
+> db.employee.update({id:"1",name:"raviraj"},{$push:{mobile:"8698567234"}});
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> 
+> db.employee.update({id:"1",name:"abhinav"},{$push:{mobile:"8698567234"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.employee.update({id:"2",name:"vikas"},{$push:{mobile:"8698567777"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.employee.update({id:"3",name:"pankaj"},{$push:{mobile:"8698562222"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.employee.update({id:"4",name:"abhishek"},{$push:{mobile:"8698560000"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.employee.find().pretty();
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "abhinav",
+	"salary" : "50000",
+	"department" : "IT",
+	"mobile" : [
+		"8698567234"
+	]
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC",
+	"mobile" : [
+		"8698567777"
+	]
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd1380fbeb96a7045450269"),
+	"id" : "4",
+	"name" : "abhishek",
+	"salary" : "80000",
+	"department" : "MECH",
+	"mobile" : [
+		"8698560000"
+	]
+}
+> db.employee.remove({salary:"80000"});
+WriteResult({ "nRemoved" : 1 })
+> db.employee.find().pretty();
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "abhinav",
+	"salary" : "50000",
+	"department" : "IT",
+	"mobile" : [
+		"8698567234"
+	]
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC",
+	"mobile" : [
+		"8698567777"
+	]
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP",
+	"mobile" : [
+		"8698562222"
+	]
+}
+
+
+> db.employee.update({id:"9",name:"sufi"},{$push:{mobile:"8698563333"}},{upsert:false});
+WriteResult({ "nMatched" : 0, "nUpserted" : 0, "nModified" : 0 })
+> db.employee.find().pretty();
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "abhinav",
+	"salary" : "50000",
+	"department" : "IT",
+	"mobile" : [
+		"8698567234"
+	]
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC",
+	"mobile" : [
+		"8698567777"
+	]
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c32b4b2bb82b36ce615"),
+	"id" : "7",
+	"name" : "rama",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c5cb4b2bb82b36ce616"),
+	"id" : "8",
+	"name" : "sunil",
+	"mobile" : [
+		"8698561111"
+	]
+}
+> db.employee.update({id:"9",name:"sufi"},{$push:{mobile:"8698563333"}},{upsert:true});
+WriteResult({
+	"nMatched" : 0,
+	"nUpserted" : 1,
+	"nModified" : 0,
+	"_id" : ObjectId("5bd13cc3b4b2bb82b36ce617")
+})
+> db.employee.find().pretty();
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "abhinav",
+	"salary" : "50000",
+	"department" : "IT",
+	"mobile" : [
+		"8698567234"
+	]
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC",
+	"mobile" : [
+		"8698567777"
+	]
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c32b4b2bb82b36ce615"),
+	"id" : "7",
+	"name" : "rama",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c5cb4b2bb82b36ce616"),
+	"id" : "8",
+	"name" : "sunil",
+	"mobile" : [
+		"8698561111"
+	]
+}
+{
+	"_id" : ObjectId("5bd13cc3b4b2bb82b36ce617"),
+	"id" : "9",
+	"name" : "sufi",
+	"mobile" : [
+		"8698563333"
+	]
+}
+> db.employee.update({id:"9",name:"sufi"},{$push:{mobile:"8698563333"}},{upsert:true});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.employee.find().pretty();
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "abhinav",
+	"salary" : "50000",
+	"department" : "IT",
+	"mobile" : [
+		"8698567234"
+	]
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC",
+	"mobile" : [
+		"8698567777"
+	]
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c32b4b2bb82b36ce615"),
+	"id" : "7",
+	"name" : "rama",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c5cb4b2bb82b36ce616"),
+	"id" : "8",
+	"name" : "sunil",
+	"mobile" : [
+		"8698561111"
+	]
+}
+{
+	"_id" : ObjectId("5bd13cc3b4b2bb82b36ce617"),
+	"id" : "9",
+	"name" : "sufi",
+	"mobile" : [
+		"8698563333",
+		"8698563333"
+	]
+}
+
+
+> db.employee.update({id:"9",name:"vikky"},{$push:{mobile:"0"}},{multi:true});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.employee.find().pretty();
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "abhinav",
+	"salary" : "50000",
+	"department" : "IT",
+	"mobile" : [
+		"8698567234"
+	]
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC",
+	"mobile" : [
+		"8698567777"
+	]
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c32b4b2bb82b36ce615"),
+	"id" : "7",
+	"name" : "rama",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c5cb4b2bb82b36ce616"),
+	"id" : "8",
+	"name" : "sunil",
+	"mobile" : [
+		"8698561111"
+	]
+}
+{
+	"_id" : ObjectId("5bd13cc3b4b2bb82b36ce617"),
+	"id" : "9",
+	"name" : "sufi",
+	"mobile" : [
+		"8698563333",
+		"8698563333"
+	]
+}
+{
+	"_id" : ObjectId("5bd13d1cb4b2bb82b36ce618"),
+	"id" : "9",
+	"name" : "vikky",
+	"mobile" : [
+		"869866666",
+		"0"
+	]
+}
+> db.employee.update({id:"9"},{$push:{mobile:"9"}},{multi:true});
+WriteResult({ "nMatched" : 2, "nUpserted" : 0, "nModified" : 2 })
+> db.employee.find().pretty();
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "abhinav",
+	"salary" : "50000",
+	"department" : "IT",
+	"mobile" : [
+		"8698567234"
+	]
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC",
+	"mobile" : [
+		"8698567777"
+	]
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c32b4b2bb82b36ce615"),
+	"id" : "7",
+	"name" : "rama",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c5cb4b2bb82b36ce616"),
+	"id" : "8",
+	"name" : "sunil",
+	"mobile" : [
+		"8698561111"
+	]
+}
+{
+	"_id" : ObjectId("5bd13cc3b4b2bb82b36ce617"),
+	"id" : "9",
+	"name" : "sufi",
+	"mobile" : [
+		"8698563333",
+		"8698563333",
+		"9"
+	]
+}
+{
+	"_id" : ObjectId("5bd13d1cb4b2bb82b36ce618"),
+	"id" : "9",
+	"name" : "vikky",
+	"mobile" : [
+		"869866666",
+		"0",
+		"9"
+	]
+}
+
+
+> db.employee.save( {  "_id":ObjectId("5bd13c5cb4b2bb82b36ce616"), "id":"11", "name":"Rohit","mobile":"808988484"});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.employee.find().pretty()
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "abhinav",
+	"salary" : "50000",
+	"department" : "IT",
+	"mobile" : [
+		"8698567234"
+	]
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC",
+	"mobile" : [
+		"8698567777"
+	]
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c32b4b2bb82b36ce615"),
+	"id" : "7",
+	"name" : "rama",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c5cb4b2bb82b36ce616"),
+	"id" : "11",
+	"name" : "Rohit",
+	"mobile" : "808988484"
+}
+{
+	"_id" : ObjectId("5bd13cc3b4b2bb82b36ce617"),
+	"id" : "9",
+	"name" : "sufi",
+	"mobile" : [
+		"8698563333",
+		"8698563333",
+		"9"
+	]
+}
+{ "_id" : ObjectId("5bd13d1cb4b2bb82b36ce618"), "name" : "Rahul" }
+> 
+
+
+
+> db.employee.remove({id:"9"});
+WriteResult({ "nRemoved" : 1 })
+> db.employee.find().pretty()
+{
+	"_id" : ObjectId("5bd137d0beb96a7045450266"),
+	"id" : "1",
+	"name" : "abhinav",
+	"salary" : "50000",
+	"department" : "IT",
+	"mobile" : [
+		"8698567234"
+	]
+}
+{
+	"_id" : ObjectId("5bd137e2beb96a7045450267"),
+	"id" : "2",
+	"name" : "vikas",
+	"salary" : "60000",
+	"department" : "ETC",
+	"mobile" : [
+		"8698567777"
+	]
+}
+{
+	"_id" : ObjectId("5bd137fabeb96a7045450268"),
+	"id" : "3",
+	"name" : "pankaj",
+	"salary" : "70000",
+	"department" : "COMP",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c32b4b2bb82b36ce615"),
+	"id" : "7",
+	"name" : "rama",
+	"mobile" : [
+		"8698562222"
+	]
+}
+{
+	"_id" : ObjectId("5bd13c5cb4b2bb82b36ce616"),
+	"id" : "11",
+	"name" : "Rohit",
+	"mobile" : "808988484"
+}
+{ "_id" : ObjectId("5bd13d1cb4b2bb82b36ce618"), "name" : "Rahul" }
+> 
+

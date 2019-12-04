@@ -1,0 +1,164 @@
+----------------------ASSIGN-14-----------
+
+
+mysql> use new;
+Database changed
+mysql> create table student
+    -> (
+    -> id int,
+    -> name varchar(20),
+    -> marks int,
+    -> PRIMARY KEY(id)
+    -> );
+Query OK, 0 rows affected (0.91 sec)
+
+mysql> insert into student values(1,'abhi',95),(2,'ravi',85),(3,'deepak',75),(4,'sarthak',65),(5,'vicky',55);
+Query OK, 5 rows affected (0.39 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> insert into student values(6,'raj',45),(7,'vikas',35),(8,'raju',25),(9,'ram',98),(10,'vicky',77);
+Query OK, 5 rows affected (0.12 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from student;
++----+---------+-------+
+| id | name    | marks |
++----+---------+-------+
+|  1 | abhi    |    95 |
+|  2 | ravi    |    85 |
+|  3 | deepak  |    75 |
+|  4 | sarthak |    65 |
+|  5 | vicky   |    55 |
+|  6 | raj     |    45 |
+|  7 | vikas   |    35 |
+|  8 | raju    |    25 |
+|  9 | ram     |    98 |
+| 10 | vicky   |    77 |
++----+---------+-------+
+10 rows in set (0.00 sec)
+
+mysql> 
+mysql> 
+mysql> delimiter $$
+mysql> drop procedure if exists grade$$
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> create procedure grade()
+    -> begin
+    -> declare i int;
+    -> declare n varchar(20);
+    -> declare m int;
+    -> declare flag int default 0;
+    -> declare C1 cursor for select id,name,marks from student;
+    -> declare continue handler for not found set flag=1;
+    -> open C1;
+    -> stud_loop:loop
+    -> fetch C1 into i,n,m;
+    -> if m>90 then
+    -> select i,n,m,'A+';
+    -> elseif m>=80 && m<=90 then
+    -> select i,n,m,'A';
+    -> elseif m>=70 && m<80 then
+    -> select i,n,m,'B+';
+    -> elseif m>=60 && m<70 then
+    -> select i,n,m,'B';
+    -> elseif m>=50 && m<60 then
+    -> select i,n,m,'C+';
+    -> elseif m>=40 && m<50 then
+    -> select i,n,m,'C';
+    -> elseif m>=30 && m<40 then
+    -> select i,n,m,'D+';
+    -> elseif m<30 then
+    -> select i,n,m,'F';
+    -> end if;
+    -> if flag=1 then 
+    -> leave stud_loop;
+    -> end if;
+    -> end loop stud_loop;
+    -> close C1;
+    -> end$$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call grade();
+    -> $$
++------+------+------+----+
+| i    | n    | m    | A+ |
++------+------+------+----+
+|    1 | abhi |   95 | A+ |
++------+------+------+----+
+1 row in set (0.00 sec)
+
++------+------+------+---+
+| i    | n    | m    | A |
++------+------+------+---+
+|    2 | ravi |   85 | A |
++------+------+------+---+
+1 row in set (0.00 sec)
+
++------+--------+------+----+
+| i    | n      | m    | B+ |
++------+--------+------+----+
+|    3 | deepak |   75 | B+ |
++------+--------+------+----+
+1 row in set (0.00 sec)
+
++------+---------+------+---+
+| i    | n       | m    | B |
++------+---------+------+---+
+|    4 | sarthak |   65 | B |
++------+---------+------+---+
+1 row in set (0.00 sec)
+
++------+-------+------+----+
+| i    | n     | m    | C+ |
++------+-------+------+----+
+|    5 | vicky |   55 | C+ |
++------+-------+------+----+
+1 row in set (0.00 sec)
+
++------+------+------+---+
+| i    | n    | m    | C |
++------+------+------+---+
+|    6 | raj  |   45 | C |
++------+------+------+---+
+1 row in set (0.00 sec)
+
++------+-------+------+----+
+| i    | n     | m    | D+ |
++------+-------+------+----+
+|    7 | vikas |   35 | D+ |
++------+-------+------+----+
+1 row in set (0.00 sec)
+
++------+------+------+---+
+| i    | n    | m    | F |
++------+------+------+---+
+|    8 | raju |   25 | F |
++------+------+------+---+
+1 row in set (0.00 sec)
+
++------+------+------+----+
+| i    | n    | m    | A+ |
++------+------+------+----+
+|    9 | ram  |   98 | A+ |
++------+------+------+----+
+1 row in set (0.00 sec)
+
++------+-------+------+----+
+| i    | n     | m    | B+ |
++------+-------+------+----+
+|   10 | vicky |   77 | B+ |
++------+-------+------+----+
+1 row in set (0.00 sec)
+
++------+-------+------+----+
+| i    | n     | m    | B+ |
++------+-------+------+----+
+|   10 | vicky |   77 | B+ |
++------+-------+------+----+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+

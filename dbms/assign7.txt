@@ -1,0 +1,104 @@
+---------------------------ASSIGN-7-------------------
+CURSOR
+
+
+mysql> select * from employee;
++-------+-----------+------------+------------+--------+---------+------+------+
+| empid | ename     | DOJ        | DOB        | salary | address | did  | pid  |
++-------+-----------+------------+------------+--------+---------+------+------+
+|     1 | puspender | 2017-09-09 | 1994-01-03 |  83000 | j-pune  | IT   | AND  |
+|     2 | brijesh   | 2013-08-24 | 1996-10-03 |  99000 | b-pune  | CMP  | IMG  |
+|     3 | ravi      | 2013-09-09 | 1994-11-03 |  40000 | k-pune  | IT   | ML   |
+|     6 | abhishek  | 2014-11-11 | 1998-07-12 |  69300 | f-pune  | MEC  | AND  |
+|     7 | sashank   | 2011-11-12 | 1998-06-22 |  78000 | g-pune  | CMP  | ML   |
+|     8 | Aman      | 2014-02-02 | 1998-09-10 |  60900 | h-pune  | EC   | ARD  |
+|     9 | rajesh    | 2018-09-09 | 1996-01-03 |  77000 | i-pune  | IT   | ML   |
++-------+-----------+------------+------------+--------+---------+------+------+
+7 rows in set (0.00 sec)
+
+mysql> delimiter $$
+mysql> drop procedure if exists status$$
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+
+mysql> 
+mysql> create procedure status()
+    -> begin
+    -> declare eid int;
+    -> declare name varchar(20);
+    -> declare sal int;
+    -> declare flag int default 0;
+    -> declare c1 cursor for select empid,ename,salary from employee;
+    -> declare continue handler for not found set flag=1;
+    -> open c1;
+    -> stud_loop:loop
+    -> fetch c1 into eid,name,sal;
+    -> if sal<50000 then
+    -> select eid,name,'low class';
+    -> elseif sal>=50000 && sal<65000 then
+    -> select eid,name,'mid class';
+    -> elseif sal>=65000 && sal<82000 then
+    -> select eid,name,'high class';
+    -> elseif sal>=82000 then
+    -> select eid,name,'VIP class';
+    -> end if;
+    -> if flag=1 then 
+    -> leave stud_loop;
+    -> end if;
+    -> end loop stud_loop;
+    -> close c1;
+    -> end$$
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call status();
+    -> $$
++------+-----------+-----------+
+| eid  | name      | VIP class |
++------+-----------+-----------+
+|    1 | puspender | VIP class |
++------+-----------+-----------+
+1 row in set (0.00 sec)
+
++------+---------+-----------+
+| eid  | name    | VIP class |
++------+---------+-----------+
+|    2 | brijesh | VIP class |
++------+---------+-----------+
+1 row in set (0.00 sec)
+
++------+------+-----------+
+| eid  | name | low class |
++------+------+-----------+
+|    3 | ravi | low class |
++------+------+-----------+
+1 row in set (0.00 sec)
+
++------+----------+------------+
+| eid  | name     | high class |
++------+----------+------------+
+|    6 | abhishek | high class |
++------+----------+------------+
+1 row in set (0.00 sec)
+
++------+---------+------------+
+| eid  | name    | high class |
++------+---------+------------+
+|    7 | sashank | high class |
++------+---------+------------+
+1 row in set (0.00 sec)
+
++------+------+-----------+
+| eid  | name | mid class |
++------+------+-----------+
+|    8 | Aman | mid class |
++------+------+-----------+
+1 row in set (0.00 sec)
+
++------+--------+------------+
+| eid  | name   | high class |
++------+--------+------------+
+|    9 | rajesh | high class |
++------+--------+------------+
+1 row in set (0.00 sec)
+
+

@@ -1,0 +1,356 @@
+------------------ASSIGNMENT-3------------------------------
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from department;
++-----+-------------+
+| Did | dname       |
++-----+-------------+
+| CMP | COMPUTER    |
+| EC  | ELECTRONICS |
+| IT  | INFORMATION |
+| MEC | MECHANICAL  |
++-----+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from project;
++-----+------------+------+
+| Pid | pname      | Lid  |
++-----+------------+------+
+| AND | ANDROID    | lko  |
+| ARD | ARDUINO    | lko  |
+| CLD | CLOUD.COMP | jhan |
+| IMG | IMG.PROCE. | beng |
+| ML  | MACHIN_L.  | pun  |
++-----+------------+------+
+5 rows in set (0.00 sec)
+
+mysql> select count(Did) from employee
+    -> group by Did;
++------------+
+| count(Did) |
++------------+
+|          3 |
+|          1 |
+|          1 |
+|          1 |
++------------+
+4 rows in set (0.00 sec)
+
+mysql> select Did,count(Did) from employee group by Did;
++------+------------+
+| Did  | count(Did) |
++------+------------+
+| CMP  |          3 |
+| EC   |          1 |
+| IT   |          1 |
+| MEC  |          1 |
++------+------------+
+4 rows in set (0.00 sec)
+
+mysql> select sum(salary) from employee;
++-------------+
+| sum(salary) |
++-------------+
+|      492000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(salary) from employee;
++-------------+
+| avg(salary) |
++-------------+
+|  82000.0000 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> select Did,avg(salary) from employee group by Did;
++------+-------------+
+| Did  | avg(salary) |
++------+-------------+
+| CMP  |  92000.0000 |
+| EC   |  58000.0000 |
+| IT   |  92000.0000 |
+| MEC  |  66000.0000 |
++------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select Did,min(salary) from employee group by Did;
++------+-------------+
+| Did  | min(salary) |
++------+-------------+
+| CMP  |       92000 |
+| EC   |       58000 |
+| IT   |       92000 |
+| MEC  |       66000 |
++------+-------------+
+4 rows in set (0.01 sec)
+
+mysql> select Did,max(salary) from employee group by Did;
++------+-------------+
+| Did  | max(salary) |
++------+-------------+
+| CMP  |       92000 |
+| EC   |       58000 |
+| IT   |       92000 |
+| MEC  |       66000 |
++------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select min(salary) from employee;
++-------------+
+| min(salary) |
++-------------+
+|       58000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select ename,max(salary) from employee;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #1 of SELECT list contains nonaggregated column 'ab.employee.ename'; this is incompatible with sql_mode=only_full_group_by
+mysql> 
+mysql> select max(salary) from employee;
++-------------+
+| max(salary) |
++-------------+
+|       92000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select sum(salary) from employee
+    -> group by Did
+    -> having Did='CMP';
++-------------+
+| sum(salary) |
++-------------+
+|      276000 |
++-------------+
+1 row in set (0.00 sec)
+
+
+
+mysql> select sum(salary) from employee group by did having did='CMP';
++-------------+
+| sum(salary) |
++-------------+
+|      276000 |
++-------------+
+
+
+mysql> select pid,sum(salary)  from employee group by pid;
++------+-------------+
+| pid  | sum(salary) |
++------+-------------+
+| AND  |       66000 |
+| ARD  |       58000 |
+| CLD  |       92000 |
+| IMG  |      184000 |
+| ML   |       92000 |
++------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select pid,sum(salary)  from employee group by pid having sum(salary)>92000;
++------+-------------+
+| pid  | sum(salary) |
++------+-------------+
+| IMG  |      184000 |
++------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select pid,sum(salary)  from employee group by pid having sum(salary)>=92000;
++------+-------------+
+| pid  | sum(salary) |
++------+-------------+
+| CLD  |       92000 |
+| IMG  |      184000 |
+| ML   |       92000 |
++------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select pid,avg(salary)  from employee group by pid having sum(salary)>=50000;
++------+-------------+
+| pid  | avg(salary) |
++------+-------------+
+| AND  |  66000.0000 |
+| ARD  |  58000.0000 |
+| CLD  |  92000.0000 |
+| IMG  |  92000.0000 |
+| ML   |  92000.0000 |
++------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select pid,avg(salary)  from employee group by pid having sum(salary)>=60000;
++------+-------------+
+| pid  | avg(salary) |
++------+-------------+
+| AND  |  66000.0000 |
+| CLD  |  92000.0000 |
+| IMG  |  92000.0000 |
+| ML   |  92000.0000 |
++------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select now();
++---------------------+
+| now()               |
++---------------------+
+| 2018-10-24 05:08:21 |
++---------------------+
+1 row in set (0.00 sec)
+
+
+mysql> select * from employee where day(doj)>day('2012-01-22');
++-------+---------+------------+------------+--------+---------+------+------+
+| empid | ename   | DOJ        | DOB        | salary | address | did  | pid  |
++-------+---------+------------+------------+--------+---------+------+------+
+|     2 | brijesh | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
++-------+---------+------------+------------+--------+---------+------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+
+mysql> select * from employee where day(doj)>=day(now());
++-------+---------+------------+------------+--------+---------+------+------+
+| empid | ename   | DOJ        | DOB        | salary | address | did  | pid  |
++-------+---------+------------+------------+--------+---------+------+------+
+|     2 | brijesh | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
++-------+---------+------------+------------+--------+---------+------+------+
+1 row in set (0.00 sec)
+
+
+mysql> select * from employee where year(doj)>=year(now())/2;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select * from employee where year(doj)>=year(now())-1;
+Empty set (0.00 sec)
+
+mysql> select * from employee where year(doj)>=year(now())-2;
++-------+--------+------------+------------+--------+---------+------+------+
+| empid | ename  | DOJ        | DOB        | salary | address | did  | pid  |
++-------+--------+------------+------------+--------+---------+------+------+
+|     3 | suresh | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
++-------+--------+------------+------------+--------+---------+------+------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where month(doj)>=month(now())/2;
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
++-------+----------+------------+------------+--------+---------+------+------+
+5 rows in set (0.00 sec)
+
+
+mysql> select ename,day(doj) as DAY,month(doj) as MONTH,year(doj) as Year from employee;
++----------+------+-------+------+
+| ename    | DAY  | MONTH | Year |
++----------+------+-------+------+
+| ramesh   |   11 |    11 | 2013 |
+| brijesh  |   24 |     8 | 2013 |
+| suresh   |   22 |     8 | 2016 |
+| abhishek |   11 |    11 | 2014 |
+| sashank  |   12 |    11 | 2011 |
+| Aman     |    2 |     2 | 2014 |
++----------+------+-------+------+
+
+
+mysql> select ename,day(doj) as DAY,month(doj) as MONTH,year(doj) as Year from employee where year(doj)>=2014;
++----------+------+-------+------+
+| ename    | DAY  | MONTH | Year |
++----------+------+-------+------+
+| suresh   |   22 |     8 | 2016 |
+| abhishek |   11 |    11 | 2014 |
+| Aman     |    2 |     2 | 2014 |
++----------+------+-------+------+
+3 rows in set (0.00 sec)
+
+mysql> select time(now());
++-------------+
+| time(now()) |
++-------------+
+| 07:04:58    |
++-------------+
+1 row in set (0.00 sec)
+
+
+mysql> select date(now()) as currentdate;
++-------------+
+| currentdate |
++-------------+
+| 2018-10-24  |
++-------------+
+1 row in set (0.00 sec)
+
+
+
+mysql> select * from employee where DOJ<date(now());
++-------+----------+------------+------------+--------+---------+------+------+
+| empid | ename    | DOJ        | DOB        | salary | address | did  | pid  |
++-------+----------+------------+------------+--------+---------+------+------+
+|     1 | ramesh   | 2013-11-11 | 1996-09-23 |  92000 | a-pune  | IT   | CLD  |
+|     2 | brijesh  | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh   | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
+|     6 | abhishek | 2014-11-11 | 1998-07-12 |  66000 | f-pune  | MEC  | AND  |
+|     7 | sashank  | 2011-11-12 | 1998-06-22 |  92000 | g-pune  | CMP  | ML   |
+|     8 | Aman     | 2014-02-02 | 1998-09-10 |  58000 | h-pune  | EC   | ARD  |
++-------+----------+------------+------------+--------+---------+------+------+
+6 rows in set (0.00 sec)
+
+mysql> select ename as newemployee from employee where year(DOJ)>year(now())-2;
+Empty set (0.00 sec)
+
+mysql> select ename as newemployee from employee where year(DOJ)>=year(now())-2;
++-------------+
+| newemployee |
++-------------+
+| suresh      |
++-------------+
+1 row in set (0.00 sec)
+
+
+
+mysql> select * from employee where day(DOJ)>day(now())-12;
++-------+---------+------------+------------+--------+---------+------+------+
+| empid | ename   | DOJ        | DOB        | salary | address | did  | pid  |
++-------+---------+------------+------------+--------+---------+------+------+
+|     2 | brijesh | 2013-08-24 | 1996-10-03 |  92000 | b-pune  | CMP  | IMG  |
+|     3 | suresh  | 2016-08-22 | 1997-06-27 |  92000 | d-pune  | CMP  | IMG  |
++-------+---------+------------+------------+--------+---------+------+------+
+2 rows in set (0.00 sec)
+

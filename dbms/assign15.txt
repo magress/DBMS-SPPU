@@ -1,0 +1,40 @@
+mysql> select *from employee $$
++-------+-------+--------+------+-------------+
+| empid | ename | salary | did  | dname       |
++-------+-------+--------+------+-------------+
+|     1 | raj   |  20000 | it   | information |
+|     2 | raj1  |  20000 | comp | computer    |
+|     3 | raj3  | 200200 | mech | mechanical  |
+|     4 | raj4  |  20000 | it   | information |
++-------+-------+--------+------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select *from department $$
++------+-------------+
+| did  | dname       |
++------+-------------+
+| comp | computer    |
+| entc | electronics |
+| it   | information |
+| mech | mechanical  |
++------+-------------+
+4 rows in set (0.00 sec)
+mysql> delimiter $$
+mysql> create trigger deltrig
+    -> before delete on department
+    -> for each row begin
+    -> delete from employee
+    -> where did=old.did;
+    -> end$$
+
+
+
+mysql> create trigger updatetrig
+    -> after update on department
+    -> for each row begin
+    -> update employee
+    -> set dname=new.dname
+    -> where did=old.did;
+    -> end$$
+
+

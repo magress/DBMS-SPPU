@@ -1,0 +1,209 @@
+> db.user.ensureIndex({id:1})
+{	
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 2,
+	"numIndexesAfter" : 2,
+	"note" : "all indexes already exist",
+	"ok" : 1
+}
+> db.user.ensureIndex({id:1})
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 2,
+	"numIndexesAfter" : 2,
+	"note" : "all indexes already exist",
+	"ok" : 1
+}
+> db.user.ensureIndex({id:2})
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 2,
+	"numIndexesAfter" : 3,
+	"ok" : 1
+}
+> db.user.ensureIndex({Name:"durgen"})
+{
+	"ok" : 0,
+	"errmsg" : "Unknown index plugin 'durgen'",
+	"code" : 67,
+	"codeName" : "CannotCreateIndex"
+}
+> db.user.find().pretty()
+{
+	"_id" : ObjectId("5bbb8be265d42ba7093573cf"),
+	"id" : 1,
+	"Name" : "durgen",
+	"DOB" : "1999-09-15",
+	"Address" : "SANJHAULI",
+	"Salary" : 4000000,
+	"Join_Date" : "Mon Oct 08 2018 22:40:27 GMT+0530 (IST)"
+}
+{
+	"_id" : ObjectId("5bbb8bf965d42ba7093573d0"),
+	"id" : 2,
+	"Name" : "dagadiya",
+	"DOB" : "1998-05-21",
+	"Address" : "PITHORGARH",
+	"Salary" : 3000000,
+	"Join_Date" : "Mon Oct 08 2018 22:40:27 GMT+0530 (IST)"
+}
+> db.user.insert({id:3,Name:'SURAJ',DOB:'1998-02-28',Address:'JAIPUR',Salary:
+2000000})
+WriteResult({ "nInserted" : 1 })
+> db.user.find().pretty()
+{
+	"_id" : ObjectId("5bbb8be265d42ba7093573cf"),
+	"id" : 1,
+	"Name" : "durgen",
+	"DOB" : "1999-09-15",
+	"Address" : "SANJHAULI",
+	"Salary" : 4000000,
+	"Join_Date" : "Mon Oct 08 2018 22:40:27 GMT+0530 (IST)"
+}
+{
+
+	"_id" : ObjectId("5bbb8bf965d42ba7093573d0"),
+	"id" : 2,
+	"Name" : "dagadiya",
+	"DOB" : "1998-05-21",
+	"Address" : "PITHORGARH",
+	"Salary" : 3000000,
+	"Join_Date" : "Mon Oct 08 2018 22:40:27 GMT+0530 (IST)"
+}
+{
+	"_id" : ObjectId("5bbba1742a547bb322caceac"),
+	"id" : 3,
+	"Name" : "SURAJ",
+	"DOB" : "1998-02-28",
+	"Address" : "JAIPUR",
+	"Salary" : 2000000
+}
+> db.user.insert({id:4,Name:'mallu',DOB:'2000-05-21',Address:'MANALI',Salary:
+3000000})
+WriteResult({ "nInserted" : 1 })
+> db.user.find().pretty()
+{
+	"_id" : ObjectId("5bbb8be265d42ba7093573cf"),
+	"id" : 1,
+	"Name" : "durgen",
+	"DOB" : "1999-09-15",
+	"Address" : "SANJHAULI",
+	"Salary" : 4000000,
+	"Join_Date" : "Mon Oct 08 2018 22:40:27 GMT+0530 (IST)"
+}
+{
+	"_id" : ObjectId("5bbb8bf965d42ba7093573d0"),
+	"id" : 2,
+	"Name" : "dagadiya",
+	"DOB" : "1998-05-21",
+	"Address" : "PITHORGARH",
+	"Salary" : 3000000,
+	"Join_Date" : "Mon Oct 08 2018 22:40:27 GMT+0530 (IST)"
+}
+{
+	"_id" : ObjectId("5bbba1742a547bb322caceac"),
+	"id" : 3,
+	"Name" : "SURAJ",
+	"DOB" : "1998-02-28",
+	"Address" : "JAIPUR",
+	"Salary" : 2000000
+}
+{
+	"_id" : ObjectId("5bbba1c72a547bb322cacead"),
+	"id" : 4,
+	"Name" : "mallu",
+	"DOB" : "2000-05-21",
+	"Address" : "MANALI",
+	"Salary" : 3000000
+}
+> db.user.update({id:1},{$set:{Department:'IT'}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.user.update({id:2},{$set:{Department:'IT'}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.user.update({id:3},{$set:{Department:'COMP'}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.user.update({id:4},{$set:{Department:'COMP'}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.user.find().pretty()
+{
+	"_id" : ObjectId("5bbb8be265d42ba7093573cf"),
+	"id" : 1,
+	"Name" : "durgen",
+	"DOB" : "1999-09-15",
+	"Address" : "SANJHAULI",
+	"Salary" : 4000000,
+	"Join_Date" : "Mon Oct 08 2018 22:40:27 GMT+0530 (IST)",
+	"Department" : "IT"
+}
+{
+	"_id" : ObjectId("5bbb8bf965d42ba7093573d0"),
+	"id" : 2,
+	"Name" : "dagadiya",
+	"DOB" : "1998-05-21",
+	"Address" : "PITHORGARH",
+	"Salary" : 3000000,
+	"Join_Date" : "Mon Oct 08 2018 22:40:27 GMT+0530 (IST)",
+	"Department" : "IT"
+}
+{
+	"_id" : ObjectId("5bbba1742a547bb322caceac"),
+	"id" : 3,
+	"Name" : "SURAJ",
+	"DOB" : "1998-02-28",
+	"Address" : "JAIPUR",
+	"Salary" : 2000000,
+	"Department" : "COMP"
+}
+{
+	"_id" : ObjectId("5bbba1c72a547bb322cacead"),
+	"id" : 4,
+	"Name" : "mallu",
+	"DOB" : "2000-05-21",
+	"Address" : "MANALI",
+	"Salary" : 3000000,
+	"Department" : "COMP"
+}
+> db.user.aggregate({$group:{_id:"Department",Avg_Salary:{$avg:"Salary"}}})
+{ "_id" : "Department", "Avg_Salary" : null }
+> db.user.aggregate({$group:{_id:"$Department",Avg_Salary:{$avg:"Salary"}}})
+{ "_id" : "COMP", "Avg_Salary" : null }
+{ "_id" : "IT", "Avg_Salary" : null }
+> db.user.aggregate({$group:{_id:"$Department",Avg_Salary:{$avg:"$Salary"}}})
+{ "_id" : "COMP", "Avg_Salary" : 2500000 }
+{ "_id" : "IT", "Avg_Salary" : 3500000 }
+> db.user.aggregate({$group:{_id:"$Department",Avg_Salary:{$max:"$Salary"}}})
+{ "_id" : "COMP", "Avg_Salary" : 3000000 }
+{ "_id" : "IT", "Avg_Salary" : 4000000 }
+> db.user.aggregate({$group:{_id:"$Department",Avg_Salary:
+{$max:"$Salary"}}}).pretty()
+{ "_id" : "COMP", "Avg_Salary" : 3000000 }
+{ "_id" : "IT", "Avg_Salary" : 4000000 }
+> db.user.aggregate({$group:{_id:"$Department",Avg_Salary:
+{$min:"$Salary"}}}).pretty()
+{ "_id" : "COMP", "Avg_Salary" : 2000000 }
+{ "_id" : "IT", "Avg_Salary" : 3000000 }
+> db.user.aggregate({$group:{_id:"$Department",Avg_Salary:
+{$sum:"$Salary"}}}).pretty()
+{ "_id" : "COMP", "Avg_Salary" : 5000000 }
+{ "_id" : "IT", "Avg_Salary" : 7000000 }
+> db.user.aggregate({$group:{_id:"$Department",Avg_Salary:{$sum:"$Salary"}}},
+{$match:{Avg_Salary:{$gt:6000000}}})
+{ "_id" : "IT", "Avg_Salary" : 7000000 }
+> db.user.aggregate({$group:{_id:"$Department",Avg_Salary:{$sum:"$Salary"}}},
+{$match:{Avg_Salary:{$gt:1000000}}})
+{ "_id" : "COMP", "Avg_Salary" : 5000000 }
+{ "_id" : "IT", "Avg_Salary" : 7000000 }
+> db.user.aggregate({$group:{_id:"$Department",Avg_Salary:{$sum:1}}})
+File: /home/hari/Documents/Assingment-15.txt Page 4 of 4
+{ "_id" : "COMP", "Avg_Salary" : 2 }
+{ "_id" : "IT", "Avg_Salary" : 2 }
+> db.user.aggregate([{$group:{_id:"$Department",Name:{$push:"$Name"}}}])
+{ "_id" : "COMP", "Name" : [ "SURAJ", "mallu" ] }
+{ "_id" : "IT", "Name" : [ "durgen", "dagadiya" ] }
+> db.user.aggregate([{$group:{_id:"$Department",First_Emp:{$first:"$Name"}}}])
+{ "_id" : "COMP", "First_Emp" : "SURAJ" }
+{ "_id" : "IT", "First_Emp" : "durgen" }
+> db.user.aggregate([{$group:{_id:"$Department",Last_Emp:{$last:"$Name"}}}])
+{ "_id" : "COMP", "Last_Emp" : "mallu" }
+{ "_id" : "IT", "Last_Emp" : "dagadiya" }
+>
